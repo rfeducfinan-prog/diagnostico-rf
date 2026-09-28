@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estancando a Sangria | RF Educação Financeira</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card { background-color: #1e293b; border: 1px solid #334155; }
+    .accent-border { border-left: 4px solid #38bdf8; }
+  </style>
+</head>
+<body class="pb-24">
+
+  <!-- Header Institucional -->
+  <header class="bg-slate-900 border-b border-slate-800 p-6 text-center">
+    <p class="text-xs font-semibold tracking-widest text-sky-400 uppercase mb-1">RF Educação Financeira</p>
+    <h1 class="text-2xl font-bold text-white">Estancando a Sangria</h1>
+    <p class="text-xs text-slate-400 mt-1">Diagnóstico & Execução em 4 Passos</p>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 mt-6 space-y-6">
+
+    <!-- PASSO 1 & 2: MAPEAMENTO E PRIORIZAÇÃO -->
+    <section class="card rounded-xl p-5 accent-border">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Passo 01 & 02</span>
+          <h2 class="text-lg font-semibold text-white">Mapeamento & Priorização</h2>
+        </div>
+        <span class="text-2xl">📋</span>
+      </div>
+
+      <!-- Formulário de Adição -->
+      <form id="debtForm" class="grid grid-cols-2 gap-3 mb-4">
+        <input type="text" id="creditor" placeholder="Credor (ex: Cartão Nu)" class="col-span-2 bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" required>
+        <input type="number" step="0.01" id="balance" placeholder="Saldo Devedor (R$)" class="bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" required>
+        <input type="number" step="0.1" id="interest" placeholder="Juros A.M. (%)" class="bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" required>
+        <button type="submit" class="col-span-2 bg-sky-600 hover:bg-sky-500 font-medium py-2.5 rounded-lg text-sm text-white transition">Adicionar Passivo</button>
+      </form>
+
+      <!-- Lista Priorizada -->
+      <div id="debtList" class="space-y-2 mt-4"></div>
+
+      <!-- Totais -->
+      <div class="mt-4 pt-4 border-t border-slate-700 flex justify-between text-sm">
+        <span class="text-slate-400">Passivo Total Mapeado:</span>
+        <span id="totalDebt" class="font-bold text-red-400">R$ 0,00</span>
+      </div>
+    </section>
+
+    <!-- PASSO 3: BLINDAGEM DO ORÇAMENTO -->
+    <section class="card rounded-xl p-5 accent-border">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Passo 03</span>
+          <h2 class="text-lg font-semibold text-white">Blindagem do Fluxo de Caixa</h2>
+        </div>
+        <span class="text-2xl">🛡️</span>
+      </div>
+
+      <div class="space-y-3 text-sm">
+        <div>
+          <label class="block text-slate-300 text-xs mb-1">Renda Líquida Mensal (R$):</label>
+          <input type="number" id="incomeInput" placeholder="0.00" oninput="updateCalculations()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-slate-300 text-xs mb-1">Vazamentos / Gastos Supérfluos Identificados (R$):</label>
+          <input type="number" id="leakInput" placeholder="0.00" oninput="updateCalculations()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div class="pt-2 flex justify-between text-sm">
+          <span class="text-slate-400">Margem Recuperável Estimada:</span>
+          <span id="savingsPotential" class="font-bold text-emerald-400">R$ 0,00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASSO 4: RESERVA INICIAL -->
+    <section class="card rounded-xl p-5 accent-border">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Passo 04</span>
+          <h2 class="text-lg font-semibold text-white">Reserva de Emergência (Meta: R$ 100)</h2>
+        </div>
+        <span class="text-2xl">🎯</span>
+      </div>
+
+      <div class="space-y-3">
+        <input type="number" id="reserveInput" placeholder="Valor guardado até agora (R$)" oninput="updateCalculations()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500">
+        
+        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
+          <div id="progressBar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+        </div>
+        <p id="reserveStatus" class="text-xs text-slate-400 text-right">0% concluído</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CTA FIXO NO RODAPÉ -->
+  <div class="fixed bottom-0 left-0 right-0 bg-slate-900/90 backdrop-blur border-t border-slate-800 p-4">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
+      <div>
+        <p class="text-xs text-slate-400">Concluiu o diagnóstico?</p>
+        <p class="text-xs font-bold text-white">Envie para o seu Mentor</p>
+      </div>
+      <button onclick="sendToWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-sm flex items-center gap-2 transition">
+        <span>Enviar Diagnóstico</span>
+        <span>📲</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let debts = JSON.parse(localStorage.getItem('rf_debts')) || [];
+
+    document.getElementById('debtForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const creditor = document.getElementById('creditor').value;
+      const balance = parseFloat(document.getElementById('balance').value);
+      const interest = parseFloat(document.getElementById('interest').value);
+
+      debts.push({ id: Date.now(), creditor, balance, interest });
+      saveAndRender();
+      e.target.reset();
+    });
+
+    function deleteDebt(id) {
+      debts = debts.filter(d => d.id !== id);
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      // Priorização por Taxa de Juros (Decrescente)
+      debts.sort((a, b) => b.interest - a.interest);
+      localStorage.setItem('rf_debts', JSON.stringify(debts));
+      
+      const listEl = document.getElementById('debtList');
+      listEl.innerHTML = '';
+
+      let total = 0;
+      debts.forEach((debt, index) => {
+        total += debt.balance;
+        const isPriority = index === 0;
+        listEl.innerHTML += `
+          <div class="flex items-center justify-between p-3 rounded-lg ${isPriority ? 'bg-red-950/40 border border-red-500/50' : 'bg-slate-800'}">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-medium text-white text-sm">${debt.creditor}</span>
+                ${isPriority ? '<span class="bg-red-500/20 text-red-400 text-[10px] px-2 py-0.5 rounded uppercase font-bold">Prioridade #1</span>' : ''}
+              </div>
+              <p class="text-xs text-slate-400">Juros: <span class="text-slate-200 font-semibold">${debt.interest}% a.m.</span></p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-bold text-sm text-white">R$ ${debt.balance.toFixed(2)}</span>
+              <button onclick="deleteDebt(${debt.id})" class="text-slate-500 hover:text-red-400 text-xs">✕</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('totalDebt').innerText = `R$ ${total.toFixed(2)}`;
+      updateCalculations();
+    }
+
+    function updateCalculations() {
+      const leaks = parseFloat(document.getElementById('leakInput').value) || 0;
+      const reserve = parseFloat(document.getElementById('reserveInput').value) || 0;
+
+      document.getElementById('savingsPotential').innerText = `R$ ${leaks.toFixed(2)}`;
+
+      const progress = Math.min((reserve / 100) * 100, 100);
+      document.getElementById('progressBar').style.width = `${progress}%`;
+      document.getElementById('reserveStatus').innerText = `${progress.toFixed(0)}% concluído (R$ ${reserve.toFixed(2)} / R$ 100,00)`;
+    }
+
+    function sendToWhatsApp() {
+      const totalDebt = document.getElementById('totalDebt').innerText;
+      const leaks = document.getElementById('savingsPotential').innerText;
+      const reserve = document.getElementById('reserveInput').value || '0';
+
+      let text = `Olá! Concluí o meu Diagnóstico no App *Estancando a Sangria*:\n\n`;
+      text += `📍 *Passivo Total:* ${totalDebt}\n`;
+      text += `📍 *Maior Prioridade:* ${debts.length > 0 ? debts[0].creditor + ' (' + debts[0].interest + '% a.m.)' : 'Nenhuma'}\n`;
+      text += `📍 *Vazamentos Identificados:* ${leaks}\n`;
+      text += `📍 *Reserva Inicial:* R$ ${reserve} / R$ 100,00\n\n`;
+      text += `Gostaria de agendar a minha sessão de mentoria para analisar este resultado!`;
+
+      const encoded = encodeURIComponent(text);
+      window.open(`https://wa.me/5565992048936?text=${encoded}`, '_blank');
+    }
+
+    // Inicialização
+    saveAndRender();
+  </script>
+</body>
+</html>
